@@ -7,7 +7,10 @@ name = "pypi"
 fastapi = "*"
 uvicorn = "*"
 pydantic = "*"
-fastapi-users = {extras = ["beanie"], version = "*"}
+jose = "*"
+python-jose = {extras = ["cryptography"], version = "*"}
+passlib = {extras = ["bcrypt"], version = "*"}
+beanie = "*"
 
 [dev-packages]
 
