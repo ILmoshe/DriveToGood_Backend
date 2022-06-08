@@ -1,10 +1,19 @@
 from enum import Enum
 from typing import Optional
+import string
+import random
 
 import pymongo
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from beanie import Document, Indexed
 from beanie import PydanticObjectId
+
+
+def random_room():
+    # choose from all lowercase letter
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for i in range(6))
+    return result_str
 
 
 class DriveType(str, Enum):
@@ -36,19 +45,16 @@ class Drive(Document):
     location: Indexed(dict, index_type=pymongo.GEOSPHERE)
     body: str
     status: Status = Status.pending
+    room_id: str = Field(default_factory=random_room)
 
-    # class Config:
-    #     schema_extra = {
-    #         'examples': [
-    #             {
-    #                 "id_user": "5eb7cf5a86d9755df3a6c593",
-    #                 "type": "roadside_assistance",
-    #                 "location": {"longitude": 0.232323, "latitude": 0.2323233},
-    #                 "body": "Hello friend I would be glad if you can help me",
-    #                 "is_completed": False
-    #             }
-    #         ]
-    #     }
+
+# TODO: make a model just for showing which exclude room_id(should be secret)
+class ShowDrive(BaseModel):
+    id_user: Optional[PydanticObjectId]
+    ver: DriveType
+    location: Indexed(dict, index_type=pymongo.GEOSPHERE)
+    body: str
+    status: Status = Status.pending
 
 
 class UpdateDrive(BaseModel):
@@ -56,15 +62,3 @@ class UpdateDrive(BaseModel):
     location: Indexed(LocationDD, index_type=pymongo.GEOSPHERE)
     body: str
     is_completed: bool
-
-    # class Config:
-    #     schema_extra = {
-    #         'examples': [
-    #             {
-    #                 "type": "roadside_assistance",
-    #                 "location": {"longitude": 0.232323, "latitude": 0.2323233},
-    #                 "body": "Hello friend I would be glad if you can help me",
-    #                 "is_completed": False
-    #             }
-    #         ]
-    #     }

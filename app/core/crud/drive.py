@@ -12,7 +12,7 @@ async def create(drive: Drive):
     if is_existed is not None:
         raise HTTPException(status_code=404, detail="there is a pending drive for the user")
     await Drive.insert(drive)
-    return "Success"
+    return drive
 
 
 async def read(location: LocationDD, skip, limit):
