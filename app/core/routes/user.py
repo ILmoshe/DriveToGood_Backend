@@ -13,7 +13,7 @@ from ..models.user import *
 # openssl rand -hex 32
 SECRET_KEY = "05ab42e9fd118e78130d1a6acfae6ccd76f89ad128ace2de951f01e4ea687e41"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 3000
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

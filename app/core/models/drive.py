@@ -4,7 +4,7 @@ import string
 import random
 
 import pymongo
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError, validator
 from beanie import Document, Indexed
 from beanie import PydanticObjectId
 
@@ -31,30 +31,36 @@ class Status(str, Enum):
 
 
 class LocationDD(BaseModel):
-    """It is not working in location IDK why"""
+    """It is not working with INDEXED idk why"""
     type: str = "Point"
     coordinates: list[float, float]
 
 
 # Becuase we are using beenie we have the priviliege of making evrything in the same file
-
-# We have UPDATE drive, CREATE drive,
-class Drive(Document):
+class BaseDrive(BaseModel):
     id_user: Optional[PydanticObjectId]
     ver: DriveType
     location: Indexed(dict, index_type=pymongo.GEOSPHERE)
+    to: LocationDD
     body: str
     status: Status = Status.pending
+    header: str
+
+    @validator('header')
+    def header_most_32_chars(cls, v):
+        if len(v) > 40:
+            raise ValueError("header too long")
+        return v.title()
+
+
+# We have UPDATE drive, CREATE drive,
+class Drive(Document, BaseDrive):
     room_id: str = Field(default_factory=random_room)
 
 
 # TODO: make a model just for showing which exclude room_id(should be secret)
-class ShowDrive(BaseModel):
-    id_user: Optional[PydanticObjectId]
-    ver: DriveType
-    location: Indexed(dict, index_type=pymongo.GEOSPHERE)
-    body: str
-    status: Status = Status.pending
+class ShowDrive(BaseDrive):
+    pass
 
 
 class UpdateDrive(BaseModel):
