@@ -38,6 +38,7 @@ class LocationDD(BaseModel):
 
 # Becuase we are using beenie we have the priviliege of making evrything in the same file
 class BaseDrive(BaseModel):
+    id: Optional[PydanticObjectId]
     id_user: Optional[PydanticObjectId]
     ver: DriveType
     location: Indexed(dict, index_type=pymongo.GEOSPHERE)
@@ -59,7 +60,7 @@ class Drive(Document, BaseDrive):
 
 
 # TODO: make a model just for showing which exclude room_id(should be secret)
-class ShowDrive(BaseDrive):
+class ShowDrive(Document, BaseDrive):
     pass
 
 
