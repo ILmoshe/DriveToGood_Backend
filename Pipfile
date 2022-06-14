@@ -11,6 +11,9 @@ jose = "*"
 python-jose = {extras = ["cryptography"], version = "*"}
 passlib = {extras = ["bcrypt"], version = "*"}
 beanie = "*"
+pytest = "*"
+requests = "*"
+random-object-id = "*"
 
 [dev-packages]
 

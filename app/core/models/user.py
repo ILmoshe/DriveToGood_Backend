@@ -27,4 +27,3 @@ class User(Document, BaseUser):
 
 class UserCreate(BaseUser):
     password: str
-

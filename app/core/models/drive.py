@@ -41,7 +41,7 @@ class BaseDrive(BaseModel):
     id_user: Optional[PydanticObjectId]
     ver: DriveType
     location: Indexed(dict, index_type=pymongo.GEOSPHERE)
-    to: LocationDD
+    to: dict
     body: str
     status: Status = Status.pending
     header: str
