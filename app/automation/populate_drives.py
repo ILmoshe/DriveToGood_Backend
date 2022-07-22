@@ -3,6 +3,7 @@ from typing import Optional
 from enum import Enum
 import json
 from random import choice
+import datetime
 
 from pydantic import BaseModel
 from random_object_id import generate
@@ -640,7 +641,7 @@ class LocationDD(BaseModel):
 
 def populate_drives(file_name: str, quantity: int = 20):
     data = []
-    with open(file_name, mode='w') as f:
+    with open(file_name, mode='w', encoding="utf-8") as f:
         for _ in range(quantity):
             id = str(generate())
             id_user = str(generate())
@@ -664,9 +665,10 @@ def populate_drives(file_name: str, quantity: int = 20):
                            "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia "
                            "deserunt mollit anim id est laborum.",
                    "status": status,
-                   "header": "short ride carry some bull shit", "room_id": room_id}
+                   "header": "short ride carry some bull shit", "room_id": room_id, "city": city["city"],
+                   "dst_city": dst_city["city"], "date": datetime.datetime.now()}
             data.append(row)
-        json.dump(data, f, ensure_ascii=False, indent=4)
+        json.dump(data, f, ensure_ascii=False, indent=4, default=str)
 
 
-populate_drives(r"C:\Users\AKA_8700K\Desktop\drive pop\file3.json", 10)
+populate_drives(r"C:\Users\AKA_8700K\Desktop\drive pop\file3.json", 30)

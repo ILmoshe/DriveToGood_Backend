@@ -2,6 +2,7 @@ from enum import Enum
 from typing import Optional
 import string
 import random
+import datetime
 
 import pymongo
 from pydantic import BaseModel, Field, ValidationError, validator
@@ -36,7 +37,6 @@ class LocationDD(BaseModel):
     coordinates: list[float, float]
 
 
-# Becuase we are using beenie we have the priviliege of making evrything in the same file
 class BaseDrive(BaseModel):
     id: Optional[PydanticObjectId]
     id_user: Optional[PydanticObjectId]
@@ -46,6 +46,9 @@ class BaseDrive(BaseModel):
     body: str
     status: Status = Status.pending
     header: str
+    city: str
+    dst_city: str
+    date: datetime.datetime = Field(default_factory=datetime.datetime.now)
 
     @validator('header')
     def header_most_32_chars(cls, v):
@@ -59,7 +62,6 @@ class Drive(Document, BaseDrive):
     room_id: str = Field(default_factory=random_room)
 
 
-# TODO: make a model just for showing which exclude room_id(should be secret)
 class ShowDrive(Document, BaseDrive):
     pass
 

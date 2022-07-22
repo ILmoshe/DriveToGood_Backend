@@ -3,8 +3,6 @@ from fastapi import Depends, FastAPI, middleware
 from fastapi.middleware.cors import CORSMiddleware
 
 from .database import db
-# from .user.schemas import UserCreate, UserRead, UserUpdate
-# from .user.users import auth_backend, current_active_user, fastapi_users
 
 from .models.drive import Drive
 from .models.user import User
