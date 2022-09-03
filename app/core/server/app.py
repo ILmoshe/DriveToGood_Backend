@@ -1,13 +1,13 @@
 from beanie import init_beanie
-from fastapi import Depends, FastAPI, middleware
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .database import db
+from app.core.db.database import db
 
-from .models.drive import Drive
-from .models.user import User
-from .routes.drive import router as drive_router
-from .routes.user import router as user_router
+from app.core.models.drive import Drive
+from app.core.models.user import User
+from app.core.routes.drive import router as drive_router
+from app.core.routes.user import router as user_router
 
 app = FastAPI()
 

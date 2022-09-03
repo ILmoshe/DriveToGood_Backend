@@ -8,7 +8,7 @@ import datetime
 from pydantic import BaseModel
 from random_object_id import generate
 
-from app.core.models.drive import random_room
+from src.core.models.drive import random_room
 
 CITY_LIST = [
     {
