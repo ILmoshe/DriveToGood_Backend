@@ -1,7 +1,5 @@
 from enum import Enum
 from typing import Optional
-import string
-import random
 import datetime
 
 import pymongo
@@ -9,12 +7,7 @@ from pydantic import BaseModel, Field, ValidationError, validator
 from beanie import Document, Indexed
 from beanie import PydanticObjectId
 
-
-def random_room():
-    # choose from all lowercase letter
-    letters = string.ascii_lowercase
-    result_str = ''.join(random.choice(letters) for i in range(6))
-    return result_str
+from ..helpers.util import random_room
 
 
 class DriveType(str, Enum):
@@ -57,9 +50,29 @@ class BaseDrive(BaseModel):
         return v.title()
 
 
-# We have UPDATE drive, CREATE drive,
 class Drive(Document, BaseDrive):
     room_id: str = Field(default_factory=random_room)
+
+    class Config:
+        schema_extra = {
+            'example':
+                {
+                    'ver': 'transporting_patient',
+                    'location': {
+                        'type': "Point",
+                        'coordinates': [34, 34]
+                    },
+                    'to': {
+                        'type': "Point",
+                        'coordinates': [35, 35]
+                    },
+                    'body': 'This is the body of the Drive',
+                    'status': 'pending',
+                    'header': 'This is my Stupid Header',
+                    'city': 'Petha Tikwa',
+                    'dst_city': 'Jerusalem',
+                }
+        }
 
 
 class ShowDrive(Document, BaseDrive):
