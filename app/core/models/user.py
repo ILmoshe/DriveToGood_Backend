@@ -1,6 +1,6 @@
 from typing import Union, Optional
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ValidationError, validator
 from beanie import Document, PydanticObjectId
 
 
@@ -27,3 +27,9 @@ class User(Document, BaseUser):
 
 class UserCreate(BaseUser):
     password: str
+
+    # @validator('password', check_fields=False)
+    # def password(cls, v):
+    #     assert v.isalnum(), 'must be alphanumeric'
+    #     assert len(v) <= 8, 'too short, must be 8 chars'
+    #     return v

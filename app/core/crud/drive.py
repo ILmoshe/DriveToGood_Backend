@@ -31,7 +31,6 @@ async def read(location: LocationDD, skip, limit):
             }
         }
     }, Drive.status == "pending").limit(limit).to_list()
-    print(result)
     return result
 
 

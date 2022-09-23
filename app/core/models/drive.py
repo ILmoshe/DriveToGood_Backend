@@ -35,12 +35,10 @@ class BaseDrive(BaseModel):
     id_user: Optional[PydanticObjectId]
     ver: DriveType
     location: Indexed(dict, index_type=pymongo.GEOSPHERE)
-    to: dict
+    destination: LocationDD
     body: str
     status: Status = Status.pending
     header: str
-    city: str
-    dst_city: str
     date: datetime.datetime = Field(default_factory=datetime.datetime.now)
 
     @validator('header')
@@ -62,20 +60,18 @@ class Drive(Document, BaseDrive):
                         'type': "Point",
                         'coordinates': [34, 34]
                     },
-                    'to': {
+                    'destination': {
                         'type': "Point",
                         'coordinates': [35, 35]
                     },
                     'body': 'This is the body of the Drive',
                     'status': 'pending',
-                    'header': 'This is my Stupid Header',
-                    'city': 'Petha Tikwa',
-                    'dst_city': 'Jerusalem',
+                    'header': 'This is my Stupid Header'
                 }
         }
 
 
-class ShowDrive(Document, BaseDrive):
+class ShowDrive(BaseDrive):
     pass
 
 
@@ -84,3 +80,9 @@ class UpdateDrive(BaseModel):
     location: Indexed(LocationDD, index_type=pymongo.GEOSPHERE)
     body: str
     is_completed: bool
+
+
+class SearchDrive(BaseModel):
+    ver: DriveType
+    location: LocationDD
+    destination: LocationDD
