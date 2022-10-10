@@ -1,4 +1,7 @@
 """A file for populating our db with drives via csv file"""
+
+CURRENT_VERSION = "ver2.json"
+
 from typing import Optional
 from enum import Enum
 import json
@@ -7,8 +10,7 @@ import datetime
 
 from pydantic import BaseModel
 from random_object_id import generate
-
-from src.core.models.drive import random_room
+from app.core.helpers.util import random_room
 
 CITY_LIST = [
     {
@@ -639,36 +641,44 @@ class LocationDD(BaseModel):
     coordinates: list[float, float]
 
 
+BODY = """Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor "
+                           "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud "
+                           "exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure "
+                           "dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla "
+                           "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia "
+                           "deserunt mollit anim id est laborum."""
+
+
 def populate_drives(file_name: str, quantity: int = 20):
     data = []
     with open(file_name, mode='w', encoding="utf-8") as f:
         for _ in range(quantity):
             id = str(generate())
             id_user = str(generate())
+
             ver = choice(list(DriveType))
+
             city = choice(CITY_LIST)
             lat = float(city["lat"])
             lng = float(city["lng"])
+
             dst_city = choice(CITY_LIST)
             dst_lat = float(dst_city["lat"])
             dst_lng = float(dst_city["lng"])
+
             status = choice(list(Status))
             room_id = random_room()
 
             row = {"_id": id, "id_user": id_user, "ver": ver,
                    "location": {"type": "Point", "coordinates": [lng, lat]},
-                   "to": {"type": "Point", "coordinates": [dst_lng, dst_lat]},
-                   "body": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor "
-                           "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud "
-                           "exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure "
-                           "dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla "
-                           "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia "
-                           "deserunt mollit anim id est laborum.",
+                   "destination": {"type": "Point", "coordinates": [dst_lng, dst_lat]},
+                   "body": BODY,
                    "status": status,
-                   "header": "short ride carry some bull shit", "room_id": room_id, "city": city["city"],
-                   "dst_city": dst_city["city"], "date": datetime.datetime.now()}
+                   "header": "short ride carry some bull shit", "room_id": room_id,
+                   "date": datetime.datetime.now()}
             data.append(row)
+
         json.dump(data, f, ensure_ascii=False, indent=4, default=str)
 
 
-populate_drives(r"C:\Users\AKA_8700K\Desktop\drive pop\file3.json", 30)
+populate_drives(rf"C:\Users\AKA_8700K\Desktop\drive pop\{CURRENT_VERSION}", 30)
