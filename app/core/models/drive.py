@@ -1,7 +1,5 @@
 from enum import Enum
 from typing import Optional
-import string
-import random
 import datetime
 
 import pymongo
@@ -9,12 +7,7 @@ from pydantic import BaseModel, Field, ValidationError, validator
 from beanie import Document, Indexed
 from beanie import PydanticObjectId
 
-
-def random_room():
-    # choose from all lowercase letter
-    letters = string.ascii_lowercase
-    result_str = ''.join(random.choice(letters) for i in range(6))
-    return result_str
+from ..helpers.util import random_room
 
 
 class DriveType(str, Enum):
@@ -42,12 +35,10 @@ class BaseDrive(BaseModel):
     id_user: Optional[PydanticObjectId]
     ver: DriveType
     location: Indexed(dict, index_type=pymongo.GEOSPHERE)
-    to: dict
+    destination: LocationDD
     body: str
     status: Status = Status.pending
     header: str
-    city: str
-    dst_city: str
     date: datetime.datetime = Field(default_factory=datetime.datetime.now)
 
     @validator('header')
@@ -57,12 +48,30 @@ class BaseDrive(BaseModel):
         return v.title()
 
 
-# We have UPDATE drive, CREATE drive,
 class Drive(Document, BaseDrive):
     room_id: str = Field(default_factory=random_room)
 
+    class Config:
+        schema_extra = {
+            'example':
+                {
+                    'ver': 'transporting_patient',
+                    'location': {
+                        'type': "Point",
+                        'coordinates': [34, 34]
+                    },
+                    'destination': {
+                        'type': "Point",
+                        'coordinates': [35, 35]
+                    },
+                    'body': 'This is the body of the Drive',
+                    'status': 'pending',
+                    'header': 'This is my Stupid Header'
+                }
+        }
 
-class ShowDrive(Document, BaseDrive):
+
+class ShowDrive(BaseDrive):
     pass
 
 
@@ -71,3 +80,9 @@ class UpdateDrive(BaseModel):
     location: Indexed(LocationDD, index_type=pymongo.GEOSPHERE)
     body: str
     is_completed: bool
+
+
+class SearchDrive(BaseModel):
+    ver: DriveType
+    location: LocationDD
+    destination: LocationDD

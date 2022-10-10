@@ -1,8 +1,6 @@
-import pytest
-
 from fastapi.testclient import TestClient
 
-from app.core.app import app
+from app.core.server.app import app
 from app.core.routes.user import pwd_context
 
 client = TestClient(app)
