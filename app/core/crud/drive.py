@@ -11,6 +11,8 @@ async def create(drive: Drive):
                                       Drive.id_user == drive.id_user)
     if is_existed is not None:
         raise HTTPException(status_code=404, detail="there is a pending drive for the user")
+
+    print("Drive created")
     await Drive.insert(drive)
     return drive
 

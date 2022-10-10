@@ -25,6 +25,11 @@ class User(Document, BaseUser):
     hashed_password: str
 
 
+class UserShow(BaseModel):
+    username: str
+    full_name: str
+
+
 class UserCreate(BaseUser):
     password: str
 
