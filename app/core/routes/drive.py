@@ -27,3 +27,9 @@ async def get_drives(longitude: float, latitude: float, skip: int = 0, limit: in
     # TODO: Add validation
     data = LocationDD(**{"_type": "Point", "coordinates": [longitude, latitude]})
     return await read(data, skip, limit)
+
+
+@router.get("/is-host/{drive_id}/{current_user_id}")
+async def is_host(drive_id: PydanticObjectId, current_user_id: PydanticObjectId):
+    found = await Drive.find_one(Drive.id == drive_id, Drive.id_user == current_user_id)
+    return True if found else False
