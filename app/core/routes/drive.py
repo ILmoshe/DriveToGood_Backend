@@ -1,8 +1,10 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends
 
 from beanie import PydanticObjectId
 
-from ..models.drive import Drive, UpdateDrive, LocationDD, ShowDrive
+from ..models.drive import Drive, UpdateDrive, LocationDD, ShowDrive, DriveType
 from ..models.user import User
 from ..crud.drive import create, update, read
 from ..routes.user import get_current_active_user
@@ -23,8 +25,16 @@ async def update_drive(updated_drive: UpdateDrive, doc_id: PydanticObjectId):
 
 
 @router.get("/drives", response_model=list[Drive])
-async def get_drives(longitude: float, latitude: float, skip: int = 0, limit: int = 5):
-    # TODO: Add validation
+async def get_drives(longitude: float, latitude: float, skip: int = 0, limit: int = 5,
+                     drive_type: DriveType = DriveType.All):
+    # TODO: Add validation and PROJECTION
+    """
+    Projection could be based on:
+        1. drive type
+        2.
+
+    """
+    print(drive_type)
     data = LocationDD(**{"_type": "Point", "coordinates": [longitude, latitude]})
     return await read(data, skip, limit)
 
