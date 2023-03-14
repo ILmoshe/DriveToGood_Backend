@@ -39,10 +39,9 @@ async def read(location: LocationDD, skip, limit):
 async def update(updated_drive: UpdateDrive, doc_id: PydanticObjectId):
     curr_drive = await Drive.get(doc_id)
     # TODO : add some validation etc
-    curr_drive.is_completed = updated_drive.is_completed
+    curr_drive.status = updated_drive.status
     curr_drive.body = updated_drive.body
     curr_drive.type = updated_drive.type
-    curr_drive.location = updated_drive.location
     await curr_drive.save()
     return "resource updated successfully"
 

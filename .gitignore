@@ -141,3 +141,6 @@ cython_debug/
 
 # Text Editor
 .vscode
+
+# venv
+drive_to_good1

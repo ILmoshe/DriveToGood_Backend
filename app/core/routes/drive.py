@@ -1,8 +1,10 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends
 
 from beanie import PydanticObjectId
 
-from ..models.drive import Drive, UpdateDrive, LocationDD, ShowDrive
+from ..models.drive import Drive, UpdateDrive, LocationDD, ShowDrive, DriveType, Status
 from ..models.user import User
 from ..crud.drive import create, update, read
 from ..routes.user import get_current_active_user
@@ -11,7 +13,9 @@ router = APIRouter(prefix="/drive", tags=["drive"])
 
 
 @router.post("/create", response_model=Drive)
-async def create_drive(drive: Drive, current_user: User = Depends(get_current_active_user)):
+async def create_drive(
+    drive: Drive, current_user: User = Depends(get_current_active_user)
+):
     drive.id_user = current_user.id
     return await create(drive)
 
@@ -23,8 +27,21 @@ async def update_drive(updated_drive: UpdateDrive, doc_id: PydanticObjectId):
 
 
 @router.get("/drives", response_model=list[Drive])
-async def get_drives(longitude: float, latitude: float, skip: int = 0, limit: int = 5):
-    # TODO: Add validation
+async def get_drives(
+    longitude: float,
+    latitude: float,
+    skip: int = 0,
+    limit: int = 5,
+    drive_type: DriveType = DriveType.All,
+):
+    # TODO: Add validation and PROJECTION
+    """
+    Projection could be based on:
+        1. drive type
+        2.
+
+    """
+    print(drive_type)
     data = LocationDD(**{"_type": "Point", "coordinates": [longitude, latitude]})
     return await read(data, skip, limit)
 
@@ -33,3 +50,11 @@ async def get_drives(longitude: float, latitude: float, skip: int = 0, limit: in
 async def is_host(drive_id: PydanticObjectId, current_user_id: PydanticObjectId):
     found = await Drive.find_one(Drive.id == drive_id, Drive.id_user == current_user_id)
     return True if found else False
+
+
+@router.post("/complete/{drive_id}")
+async def set_drive_comlete(drive_id: PydanticObjectId):
+    print(drive_id)
+    drive = await Drive.find_one(Drive.id == drive_id)
+    await drive.set({Drive.status: Status.completed})
+    return True

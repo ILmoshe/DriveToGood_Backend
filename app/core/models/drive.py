@@ -11,6 +11,7 @@ from ..helpers.util import random_room
 
 
 class DriveType(str, Enum):
+    All = "All"
     transporting_patient = "transporting_patient"
     hospital = "hospital"
     food_distribution = "food_distribution"
@@ -76,10 +77,9 @@ class ShowDrive(BaseDrive):
 
 
 class UpdateDrive(BaseModel):
-    type: DriveType
-    location: Indexed(LocationDD, index_type=pymongo.GEOSPHERE)
-    body: str
-    is_completed: bool
+    type: Optional[DriveType]
+    body: Optional[str]
+    status: Optional[Status]
 
 
 class SearchDrive(BaseModel):

@@ -2,12 +2,12 @@ from beanie import init_beanie
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.core.db.database import db
+from core.db.database import db
 
-from app.core.models.drive import Drive
-from app.core.models.user import User
-from app.core.routes.drive import router as drive_router
-from app.core.routes.user import router as user_router
+from core.models.drive import Drive
+from core.models.user import User
+from core.routes.drive import router as drive_router
+from core.routes.user import router as user_router
 
 app = FastAPI()
 
